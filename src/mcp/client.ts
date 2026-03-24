@@ -7,14 +7,20 @@ export interface MpcClient {
 }
 
 export class MockMcpClient implements MpcClient {
-  private readonly invalidMode = (process.env.MOCK_INVALID_TOOL_OUTPUT ?? "false").toLowerCase() === "true";
+  private readonly invalidMode = (process.env.MOCK_INVALID_TOOL_OUTPUT ?? "false").toLowerCase();
+  private signalCallCount = 0;
 
   async collectInpSignal(page: string): Promise<PerformanceSignal> {
-    if (this.invalidMode) {
+    this.signalCallCount += 1;
+    const shouldReturnInvalid =
+      this.invalidMode === "true" || this.invalidMode === "always" ||
+      (this.invalidMode === "once" && this.signalCallCount === 1);
+
+    if (shouldReturnInvalid) {
       return {
         page,
         interaction: "checkout-button-click",
-        // Simulate broken tool output for schema rejection testing.
+        // Simulate a broken tool response to validate ReAct retries + schema rejection.
         inpMs: "420" as unknown as number,
         p75InpMs: 390,
         longTaskMs: 280,

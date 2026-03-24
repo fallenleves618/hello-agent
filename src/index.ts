@@ -1,5 +1,6 @@
 import { PlannerAgent } from "./agents/planner.js";
 import { ProfilerAgent } from "./agents/profiler.js";
+import { ReactorAgent } from "./agents/reactor.js";
 import { HypothesisAgent } from "./agents/hypothesis.js";
 import { FixerAgent } from "./agents/fixer.js";
 import { VerifierAgent } from "./agents/verifier.js";
@@ -20,6 +21,7 @@ async function main(): Promise<void> {
 
   const mcp = new MockMcpClient();
   const memory = new MemoryStore();
+  const reactor = new ReactorAgent();
 
   const workflow = new InpAutofixWorkflow(
     {
@@ -29,9 +31,14 @@ async function main(): Promise<void> {
       fixer: new FixerAgent(mcp),
       verifier: new VerifierAgent(mcp),
       governor: new GovernorAgent(),
+      reactor,
     },
     memory,
     logger,
+    {
+      enabled: config.enableReact,
+      maxSteps: config.reactMaxSteps,
+    },
   );
 
   const page = process.argv[2] ?? "/checkout";

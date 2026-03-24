@@ -58,12 +58,25 @@ export const GovernanceDecisionSchema = z.object({
 });
 export type GovernanceDecision = z.infer<typeof GovernanceDecisionSchema>;
 
+export const ReactStepSchema = z.object({
+  phase: z.enum(["profile", "fix", "verify"]),
+  attempt: z.number().int().min(1),
+  thought: z.string().min(1),
+  action: z.string().min(1),
+  observation: z.string().min(1),
+  status: z.enum(["success", "error"]),
+  timestamp: z.string().datetime(),
+});
+export const ReactTraceSchema = z.array(ReactStepSchema);
+export type ReactStep = z.infer<typeof ReactStepSchema>;
+
 export const WorkflowResultSchema = z.object({
   signal: PerformanceSignalSchema,
   hypothesis: HypothesisSchema,
   patch: PatchProposalSchema,
   verification: VerificationResultSchema,
   governance: GovernanceDecisionSchema,
+  reactTrace: ReactTraceSchema,
 });
 export type WorkflowResult = z.infer<typeof WorkflowResultSchema>;
 

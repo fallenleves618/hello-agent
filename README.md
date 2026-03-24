@@ -11,6 +11,7 @@ A frontend performance autonomous multi-agent project (INP-first).
 - `FixerAgent`
 - `VerifierAgent`
 - `GovernorAgent`
+- `ReactorAgent` for bounded ReAct loops on `profile/fix/verify`
 - MCP client abstraction with a `MockMcpClient`
 - One end-to-end workflow: `Observe -> Hypothesize -> Act -> Verify -> Govern`
 - In-memory knowledge store (`MemoryStore`) for iteration summary
@@ -34,6 +35,7 @@ npm run dev -- /checkout
 ## Current Scope
 
 - Initial version uses mock tooling only (`MOCK_MODE=true`)
+- ReAct is enabled by default and controlled via `ENABLE_REACT` / `REACT_MAX_STEPS`
 - Real MCP server integration and real patch application are TODO
 - No OpenAI SDK runtime wiring yet (added in next milestone)
 
